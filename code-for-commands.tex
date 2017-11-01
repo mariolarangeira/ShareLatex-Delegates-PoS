@@ -1,0 +1,54 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorem, Definition, Proofs,
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtheorem{theorem}{Theorem}
+% \newtheorem{claim}[theorem]{Claim}
+\newtheorem{subclaim}{Claim}[theorem]
+% \newtheorem{proposition}[theorem]{Proposition}
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{conjecture}[theorem]{Conjecture}
+% \newtheorem{observation}[theorem]{Observation}
+
+%\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{construction}[theorem]{Construction}
+%\newtheorem{example}[theorem]{Example}
+\newtheorem{protocol}[theorem]{Protocol}
+%\newtheorem{remark}[theorem]{Remark}
+\newtheorem{assumption}[theorem]{Assumption}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% New Command
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\eufcma}{\ensuremath{\textsf{EUF-CMA}}}
+
+\newcommand{\msgdesc}{\omega}
+
+\newcommand{\ppt}{\mathsf{PPT}}
+\newcommand{\secp}{\lambda}
+\newcommand{\sig}{\mathsf{SIG}}
+\newcommand{\sigsk}{\ensuremath{sk}}
+\newcommand{\sigvk}{\ensuremath{vk}}
+\newcommand{\sigm}{\ensuremath{m}}
+\newcommand{\sigout}{\ensuremath{\sigma}}
+\newcommand{\sigpgen}{\ensuremath{\sig.\mathsf{PGen}}}
+\newcommand{\sigkgen}{\ensuremath{\sig.\mathsf{KGen}}}
+\newcommand{\sigsign}{\ensuremath{\sig.\mathsf{Sign}}}
+\newcommand{\sigvrf}{\ensuremath{\sig.\mathsf{Vrf}}}
+\newcommand{\sigparam}{\ensuremath{\sig.\mathsf{param}}}
+
+\newcommand{\proxsig}{\ensuremath{\mathsf{PROX}}}
+\newcommand{\proxdel}{\mathsf{D}}
+\newcommand{\proxp}{\mathsf{P}}
+\newcommand{\proxdelsign}{\ensuremath{\proxsig.(\proxdel,\proxp)}}
+\newcommand{\proxsignalg}{\ensuremath{\proxsig.\mathsf{PS}}}
+\newcommand{\proxsignver}{\ensuremath{\proxsig.\mathsf{PV}}}
+\newcommand{\proxsignid}{\ensuremath{\proxsig.\mathsf{ID}}}
+\newcommand{\proxsk}{\ensuremath{\textit{skp}}}
+\newcommand{\naturalSet}{\ensuremath{\mathbb{N}}}
+\newcommand{\st}{\ensuremath{st}}
+\newcommand{\slot}{\ensuremath{sl}}
+\newcommand{\assign}{\ensuremath{s}}

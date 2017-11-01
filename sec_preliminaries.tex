@@ -1,0 +1,46 @@
+\section{Preliminaries}
+
+
+\subsection{Digital Signatures}\label{sec:sig}
+We will employ digital signatures with Existential Unforgeability under Adaptive Chosen Message Attacks (\eufcma) \cite{C:GolMicRiv84}. In general, a digital signature scheme is a tuple of four $\ppt$ algorithms $\sig=(\sigpgen,\sigkgen,\sigsign,$ $\sigvrf)$ such that:
+
+\begin{itemize}[noitemsep]
+\item $\sigpgen(1^{\secp})$ takes in a security parameter and outputs a global parameter $\sigparam$.
+\item $\sigkgen($\sigparam$)$ takes $\sigparam$ and outputs a verification key $\sigvk$ and a signing key $\sigsk$.
+\item $\sigsign_{\sigsk}(\sigm)$ takes in a signing key $\sigsk$ and a message $\sigm$, outputting a signature $\sigout$ on message $\sigm$ under signing key $\sigsk$.
+\item $\sigvrf_{\sigvk}(\sigm,\sigout)$ takes in a verification key $\sigvk$, a message $\sigm$ and a signature $\sigout$, outputting 1 if the signature is valid and 0 otherwise.
+\end{itemize}
+
+\subsection{Proxy Signature Scheme}\label{sec:proxysig}
+Given the signature scheme $\sig$, a proxy signature scheme as defined in~\cite{JC:BolPalWar12} is a tuple $\proxsig=(\sig,\proxdelsign,\proxsignalg,\proxsignver,\proxsignid)$, where the constituent algorithm runs in polynomial time and its components are defined as follows:
+\begin{itemize}
+    \item $\proxdelsign$  is a pair of interactive randomized logarithms forming the \textit{proxy-designation protocol}. The input to each algorithm includes two public keys $\sigvk_{i}$, $\sigvk_{j}$ for the designator $i$ and the proxy signer $j$, respectively. $\proxdel$ also takes as input the secret key $\sigsk_{i}$ of the designator, the indentity $j$ of the proxy signer, and a message space descriptor $\msgdesc$ for which user $i$ wants to delegate its signing rights to user $j$. $\proxp$ also takes as input the secret key $\sigsk_{j}$ of the proxy signer. As a result of the interaction,the expected local output of $\proxp$ is $\proxsk$, a proxy signing key that user $j$ uses to produce proxy signatures on behalf of user $i$, for messages in $\msgdesc$. $\proxdel$ has no local output. We write $\proxsk_{i,j} \stackrel{\$}{\leftarrow} [\proxdel (\sigvk_{i},\sigsk_{i},j,\sigvk_{j},\msgdesc),\proxp (\sigvk_{j},\sigsk_{j},\sigvk_{i})]$ for the result of this interaction.
+    
+    \item $\proxsignalg$ is the (possibly) randomized proxy signing algorithm. It takes input a proxy signing key $\proxsk$ and a message $M\in\{0,1\}^\ast$, and outputs a proxy signature $p\sigma\in\{0,1\}^\ast\cup \{\bot\}$.
+    
+    \item $\proxsignver$ is the deterministic proxy verification algorithm. It takes input a public key $pk$, a message $M\in\{0,1\}^\ast$ and a proxy signature $p\sigma$, and outputs $0$ or $1$. In the latter case, we say that $p\sigma$ is a valid proxy signature for $M$ relative to $pk$.
+    
+    \item $\proxsignid$ is the proxy identification algorithm. It takes input a valid proxy signature $p\sigma$, and outputs an identity $i\in\naturalSet$ or $\bot$ in case of an error.
+\end{itemize}
+
+\subsection{Block Related Definitions}
+
+The delegation system requires that the information of the owner of the stake has to be detached to from the right of generating a block for a given time slot. In other words, the following definitions will explicitly separate these two pieces of information in two different items.
+
+\begin{definition}[Genesis Block]\label{def:genesis}
+The genesis block $B_{0}$ contains the list of stakeholders identified by their public-keys, their respective stakes, and the delegate assigned to that stake $(\sigvk_{1},s_{1},\sigvk^\ast_{1}),\dots,(\sigvk_{n},s_{n},\sigvk^\ast_{n})$ and auxiliary information $\rho$.
+\end{definition}
+
+
+\begin{definition}[State]
+A state is a string $\st\in\{0,1\}^\secp$.
+\end{definition}
+
+\begin{definition}[Epoch]
+An epoch is a set of $R$ adjacent slots $S=\{\st_{1},\dots,\st_{R}\}$.
+\end{definition}
+
+Similarly to Definition~\ref{def:genesis}, the issuer of the block has to be identified in the block. The next definition, describes two cases: (1) one the issuer, and signer, of the block is the expected stake holder $U_{i}$ therefore a simple signature $\sigout$ is enough (therefore the proxy signature is not used, and (2) the signer is another participant of the protocol, say $U_{j}$, with $j\neq i$, therefore two signatures are necessary, also with the proxy signing key $\proxsk_{i,j}$.
+\begin{definition}[Block]
+A block $B$ generated at a slot $\slot_{i}\in\{\slot_{1},\dots,\slot_{R}\}$ contains the current state $\st\in\{0,1\}^\secp$, data $d\in\{0,1\}^\secp$, the slot number $\slot_{i}$ and a tuple $(\sigma,p\sigma, \proxsk)$ of signature, proxy-signature and proxy signing key, respectively, such that if $i\neq j$ then $\sigma=\sigsign_{\sigsk_{j}}(\st,d,\slot_{i})$ and $p\sigma=\proxsignalg_{\proxsk_{i,j}}(\st,d,\slot_{i})$. Otherwise $\sigma=\sigsign_{\sigsk_{i}}(\st,d,\slot_{i})$ and $p\sigma=\bot$.
+\end{definition}

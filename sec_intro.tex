@@ -1,0 +1,26 @@
+
+\section{Introduction}
+Proof-of-Stake (PoS) is a new paradigm in comparison to the Proof-of-Work (PoW). The former is based on the ratio of how much currency the participants have, \textit{i.e}, the more coins the participant has, the greater is the chance to be chosen as the generator of the new block. Whereas in  the latter the probability of being chosen as the block issuer depends exclusively on how much ``work'' the participants provide, \textit{i.e.}, hash power.
+
+
+This distinction has consequences. Assuming that every participant has currency, everyone can be chosen as block issuer in the PoS realm, which does not hold true in the PoW realm. A major setback in these mechanism, is that it requires the participants to be online when chosen. The period within the block issuer is decided is called \textit{time slot} which are aggregated in \textit{epochs}. Each time-slot is associated with a participant following the coin distribution in the previous epoch.  
+
+In order to avoid having too many slots without an issued block, that is an empty slot, which would happen if the selected participant is off line during its time-slot, it was proposed an alternative mechanism: each participant, who can be selected as block issuer, can set in advance, that some other player can be the block issuer on its behalf. In other words, each player can specify a \textit{delegate} among other players. The delegate would issue the block on behalf of the delegator by the time the time-slot arrives. This mechanism eases the requirement of being online during the whole execution of the protocol.
+
+
+\paragraph{Delegation Methods.} The delegation of a stake can be done at any point during the protocol. In particular we specify three different methods. All of them are based on proxy signature schemes, where a user can delegate its signing rights to another public key.
+\begin{itemize}
+    \item While issuing the block (lightweight): Before the time slot, the user can generate a proxy public key to another user, the delegate, and send it to the network, the delegate will use the received public key when signing and publishing the block in the blockchain.
+    \item In advance (heavyweight): The delegator has to store in the blockchain the generated proxy public key for a given delegate, which can, in the appropriate time slot, publish and sign the generated block on the behalf of the delegator using the previously generated proxy public key.
+    \item On every transaction: Every transaction specifies the stake owner on the received stake in the moment of receiving the coin. 
+\end{itemize}
+Given the above three methods of delegating the right of issuing a block, it is convenient to assume the existence of two keys: (1) one for spending the coin (2) one for transfer the right of issuing a block, \textit{i.e.}, delegation. 
+
+
+\paragraph{The Proof-of-Stake Protocol: Ouroboros.} Our delegation system relies on the Ouroboros protocol~\cite{EPRINT:DGKR17}, which in each beginning of an epoch, \textit{i.e.,} the genesis block of the epoch, describes the distribution of the coins. This state of the distribution works as the starting point for selecting the slot leaders via a distributed coin tossing protocol performed by the participants of the protocol.  
+
+For efficiency purposes, the set of delegates is a subset of all the participants of the protocol. They will be requested to perform the secure multiparty computation (MPC) which is part of the main protocol, \textit{i.e.}, coin tossing. The delegates set is decided given a threshold in the number of the delegated stakes of each member of the set. In other words, the  participants allowed to perform the MPC tasks are only the ones which has the minimal amount of stakes.  
+
+\paragraph{Hierarchical Deterministic Wallets.} The introduction of a second key raises questions regarding its security and maintenance. The main method for keeping systems with single private keys rely on Hierarchical Deterministic  Wallets, \textit{i.e.}, HD wallets. 
+
+Briefly, upon receiving a \textit{seed}, an HD Wallet can generate a hierarchy of private-public key pairs, and each pair is associated with an index. Furthermore, each \textit{child keys} can also generate its set of \textit{children keys}. This rich layered environment is particular interesting for a setting which there are different players and roles. For example, its standardized use, given by~\cite{bip32}, illustrates several use cases for a variety of business and corporate level users. Unfortunately  the more complex use cases with mentioned earlier, two private key for \textit{spending} and \textit{delegating}, has not been addressed. This analysis is particularly needed, since double key setting may enhance the security, given the separation between the two private keys, and efficiency, given by its relation with delegation based protocols, \textit{e.g.}, Ouroboros.
